@@ -1,0 +1,45 @@
+HOME = /home/ovsoil
+CXX = g++
+CXXFLAGS = -O2 -g -Wall -std=gnu++0x -D_REENTRANT
+
+TARGET = GLDraw
+SRCPATH = src
+
+EXTRA += common/freetype-gl/platform.o \
+		 common/freetype-gl/text-buffer.o \
+		 common/freetype-gl/vertex-buffer.o \
+		 common/freetype-gl/vertex-attribute.o \
+		 common/freetype-gl/shader.o \
+		 common/freetype-gl/texture-atlas.o \
+		 common/freetype-gl/texture-font.o \
+		 common/freetype-gl/vector.o \
+		 common/freetype-gl/font-manager.o \
+		 common/freetype-gl/edtaa3func.o \
+		 common/freetype-gl/mat4.o
+
+
+INCPATH = -Icommon/GLTools/include -Icommon/freetype-gl/ -I$(HOME)/Libs/boost_1_56_0 -I/usr/include/GL
+LIBPATH = -Lcommon/GLTools/lib -L$(HOME)/Libs/boost_1_56_0/stage/lib -L/usr/local/lib -L/usr/lib  
+
+#-L/usr/local/lib  -L/usr/lib 
+#-I/usr/local/include -I/usr/include -I/usr/local/include/GL -I/usr/include/GL 
+
+LIBS = -lGLEW -lX11 -lGL -lGLU -lglut -lm -lgltools -lboost_thread -lfreetype
+
+OBJS = Singleton.o Data.o DataManager.o PointTraceRender.o TrianglesRender.o TextRender.o GLTexture.o Application.o TexturesManager.o $(TARGET).o
+
+%.o: $(SRCPATH)/%.cpp
+	$(CXX) $(CXXFLAGS) $(INCPATH) -c $< -o $@
+
+$(TARGET) : $(OBJS)
+	$(CXX) $(LIBPATH) $(LIBS) -o $(TARGET) $(OBJS) $(EXTRA)
+
+all: 	$(TARGET)
+
+.PHONY: clean test
+
+clean:
+	rm -f $(OBJS) $(TARGET)
+
+test:
+	echo $(SRC)
